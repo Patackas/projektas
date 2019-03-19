@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin all docs view</title>
+</head>
+<body>
+<!--<h2>Use the XMLHttpRequest to get the content of a file.</h2>-->
+<!--<p>The content is written in JSON format, and can easily be converted into a JavaScript object.</p>-->
+
+<!--<p id="/api/notes/{id}"></p>-->
+
+<!--<script>-->
+    <!--var xmlhttp = new XMLHttpRequest();-->
+    <!--xmlhttp.onreadystatechange = function() {-->
+        <!--if (this.readyState == 4 && this.status == 200) {-->
+            <!--var myObj = JSON.parse(this.responseText);-->
+            <!--document.getElements("/api/notes/{id}").innerHTML = myObj.title + ":  " +  myObj.content;-->
+        <!--}-->
+    <!--};-->
+    <!--xmlhttp.open("GET", "/api/notes/{id}", true);-->
+    <!--xmlhttp.send();-->
+<!--</script>-->
+
+<p>Take a look at <a href="/api/notes/" target="_blank">all the notes </a>in json, todo json.parse (?!?) becuase now its the hardcoded nnmote by id</p>
+
+
+<div>
+    <p id="demo"></p>
+
+    <script>
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                var myObj = JSON.parse(this.responseText);
+
+                // for (var id in myObj) {
+                //     if (myObj.hasOwnProperty(id)) {
+                //         console.log(id + ": " + myObj[id]);
+                //     }
+                // }
+                document.getElementById("demo").innerHTML = myObj.title +" "+ myObj.content;
+            }
+
+        };
+        xmlhttp.open("GET", "/api/notes/1", true);
+        xmlhttp.send();
+    </script>
+
+    <p>Take a look at <a href="/api/notes/1" target="_blank">Notes (1)</a></p>
+
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.quilljs.com/1.3.4/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.4/quill.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+    <div id="editor"></div>
+    <button onclick="logHtmlContent()">Log content as HTML</button>
+
+
+    <!--<h2>Convert HTML Form Values to JSON( click submit to display results )</h2>-->
+    <!--<div id="left">-->
+        <!--<textarea id="results"></textarea>-->
+    <!--</div>-->
+    <form id="test-form">
+        <table id='json-table'>
+            <tbody>
+            <tr>
+                <th >title</th>
+                <th >content</th>
+
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" id="title" name="title"> </td>
+                <td>
+                    <input type="text" id="content" name="content"  > </td>
+
+            </tr>
+            </tbody>
+        </table>
+
+        <a href="" id="submit" type="submit" value="submit" > Submit </a>
+
+    </form>
+
+    <br>
+    <br>
+
+
+    <div id="right">&nbsp</div>
+
+
+
+
+    <!--<form id="form1">-->
+        <!--Title :- <input type="text" name="title" id="title" />-->
+        <!--Content:- <input type="text" name="content" id="content" />-->
+        <!--<input type="button" id="Save" value="Save Data" />-->
+    <!--</form>-->
+
+</body>
+
+<script>
+    var toolbarOptions = [
+        ['bold', 'italic'],
+        [{ 'size': ['small', false, 'large', 'huge'] }],
+        [{ 'color': [] }, { 'background': [] }]
+    ];
+    var quill = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        theme: 'snow'
+    });
+    function logHtmlContent() {
+        console.log(quill.root.innerHTML);
+    }
+</script>
+
+<script>
+
+    async function fetchdata () {
+        const response = await fetch ("http://localhost:8080/api/notes/", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "title" : $('#title').val(),
+                "content": $('#content').val()
+            })
+        });
+
+        console.log(response);
+        const body = await response.json();
+    }
+    $(document).ready(function() {
+        $("#submit").on("click", function (e) {
+            //
+            //         // as you have used hyperlink(a tag), this prevent to redirect to another/same page
+            e.preventDefault();
+            fetchdata();
+        });
+    });
+
+</script>
+<!--<script>-->
+
+    <!--function formToJSON(table){//begin function-->
+
+
+<!--//array to hold the key name-->
+        <!--var keyName;-->
+
+<!--//array to store the keyNames for the objects-->
+        <!--var keyNames = [];-->
+
+<!--//array to store the objects-->
+        <!--var objectArray = [];-->
+
+
+<!--//get the number of cols-->
+        <!--var numOfCols = table.rows[0].cells.length;-->
+
+<!--//get the number of rows-->
+        <!--var numOfRows = table.rows.length;-->
+
+<!--//add the opening [ array bracket-->
+<!--//         objectArray.push("[");-->
+
+
+
+<!--//loop through and get the propertyNames or keyNames-->
+        <!--for(var i = 0; i < numOfCols; i++){//begin for loop-->
+
+            <!--//store the html of the table heading in the keyName variable-->
+            <!--keyName = table.rows[0].cells[i].innerHTML;-->
+
+            <!--//add the keyName to the keyNames array-->
+            <!--keyNames.push(keyName);-->
+
+        <!--}//end for loop-->
+
+
+
+        <!--//loop through rows-->
+        <!--for(var i = 1; i < numOfRows; i++){//begin outer for loop-->
+
+            <!--//add the opening { object bracket-->
+            <!--objectArray.push("{\n");-->
+
+            <!--for(var j=0; j < numOfCols; j++){//begin inner for loop-->
+
+                <!--//extract the text from the input value in the table cell-->
+                <!--var inputValue = table.rows[i].cells[j].children[0].value;-->
+
+                <!--//store the object keyNames and its values-->
+                <!--objectArray.push("\"" + keyNames[j] + "\":" + "\"" + inputValue + "\"");-->
+
+<!--//if j less than the number of columns - 1(<&#45;&#45; accounting for 0 based arrays)-->
+                <!--if(j < (numOfCols - 1)){//begin if then-->
+
+                    <!--//add the , seperator-->
+                    <!--objectArray.push(",\n");-->
+
+                <!--}//end if then-->
+
+            <!--}//end inner for loop-->
+
+            <!--//if i less than the number of rows - 1(<&#45;&#45; accounting for 0 based arrays)-->
+            <!--if(i < (numOfRows - 1)){//begin if then-->
+
+                <!--//add the closing } object bracket followed by a , separator-->
+                <!--objectArray.push("\n},\n");-->
+
+            <!--}-->
+            <!--else{-->
+
+                <!--//add the closing } object bracket-->
+                <!--objectArray.push("\n}");-->
+
+            <!--}//end if then else-->
+
+        <!--}//end outer for loop-->
+
+        <!--//add the closing ] array bracket-->
+        <!--// objectArray.push("]");-->
+
+        <!--return objectArray.join("");-->
+
+
+    <!--}//end function-->
+
+
+    <!--// $("#test-form").on("submit",function(e) {-->
+    <!--//-->
+    <!--//     //stop form form submitting-->
+    <!--//     e.preventDefault();-->
+    <!--//-->
+    <!--//     //the table object-->
+    <!--//     var table = $("#json-table")[0];-->
+    <!--//-->
+    <!--//     //display the results-->
+    <!--//     $("#results").val(formToJSON(table));-->
+
+
+    <!--//     var myData = JSON.stringify(table);-->
+    <!--//-->
+    <!--//-->
+    <!--//     $(document).ready(function () {-->
+    <!--//         $("#Save").click(function () {-->
+    <!--//             var note = new Object(table);-->
+    <!--//-->
+    <!--//             note.title = $('#title').val();-->
+    <!--//             note.content = $('#content').val();-->
+    <!--//             JSON.stringify(note);-->
+    <!--//             $.ajax({-->
+    <!--//                 headers: {-->
+    <!--//                     'Accept': 'application/json',-->
+    <!--//                     'Content-Type': 'application/json'-->
+    <!--//                 },-->
+    <!--//                 url: 'http://localhost:8080/api/notes',-->
+    <!--//                 type: 'POST',-->
+    <!--//                 dataType: 'json',-->
+    <!--//                 data: note,-->
+    <!--//                 success: function (data, textStatus, xhr) {-->
+    <!--//                     console.log(data);-->
+    <!--//                 },-->
+    <!--//                 error: function (xhr, textStatus, errorThrown) {-->
+    <!--//                     console.log('Error in Operation');-->
+    <!--//                 }-->
+    <!--//             });-->
+    <!--//         });-->
+    <!--//     });-->
+    <!--// });-->
+
+    <!--//     &lt;!&ndash;$.ajax({&ndash;&gt;-->
+    <!--//         &lt;!&ndash;headers: {&ndash;&gt;-->
+    <!--//             &lt;!&ndash;'Accept': 'application/json',&ndash;&gt;-->
+    <!--//             &lt;!&ndash;'Content-Type': 'application/json'&ndash;&gt;-->
+    <!--//         &lt;!&ndash;},&ndash;&gt;-->
+    <!--//         &lt;!&ndash;url: "/api/notes/",&ndash;&gt;-->
+    <!--//         &lt;!&ndash;type: "POST",&ndash;&gt;-->
+    <!--//         &lt;!&ndash;contentType: "application/json",&ndash;&gt;-->
+    <!--//         &lt;!&ndash;dataType: "json",&ndash;&gt;-->
+    <!--//         &lt;!&ndash;data: myData,&ndash;&gt;-->
+    <!--//-->
+    <!--//         &lt;!&ndash;success: function (result) {&ndash;&gt;-->
+    <!--//             &lt;!&ndash;console.log(result);&ndash;&gt;-->
+    <!--//         &lt;!&ndash;},&ndash;&gt;-->
+    <!--//-->
+    <!--//         &lt;!&ndash;error: function (xhr, resp, text) {&ndash;&gt;-->
+    <!--//             &lt;!&ndash;console.log(xhr, resp, text);&ndash;&gt;-->
+    <!--//         &lt;!&ndash;}&ndash;&gt;-->
+    <!--//     &lt;!&ndash;});&ndash;&gt;-->
+    <!--// &lt;!&ndash;});&ndash;&gt;-->
+
+<!--</script>-->
+
+
+
+
+</html>
